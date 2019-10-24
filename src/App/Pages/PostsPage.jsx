@@ -12,8 +12,13 @@ class PostsPage extends React.Component {
     static async getInitialProps({match, history, location, store, ...ctx }) {
         const homeData = await Promise.all([
             
-            await store.dispatch(getCategory('en', match.params.category)),
+            await store.dispatch(getCategory('en', match.params.category)).then( async response=> {
+                if(response.data.children.length == 0){
+                    await store.dispatch(getCategory('en', response.data.parent));
+                }
+            }),
             await store.dispatch(getPostList('en', match.params.category)),
+            await store.dispatch(getPost('en', match.params.post)),
         ]).then(async response => {
             return store.getState();
         });
@@ -22,20 +27,34 @@ class PostsPage extends React.Component {
 
     constructor(props) {
         super(props);
+        let pageComponents = {
+            PortfolioPage: PortfolioPage,
+            BlogFull: BlogFull
+        }
+
+        let categoryInfo = false;
+        let categoryList = false;
+        let currentComponent = Loading;
+        let postsList = [];
+        let category = this.props.match.params.category;
+
+        if(typeof this.props.categories[category] != 'undefined')  {
+            categoryInfo = this.props.categories[category];
+            categoryList = (categoryInfo.children.length == 0 ) ? this.props.categories[categoryInfo.parent] : categoryInfo;
+            currentComponent = (typeof pageComponents[categoryInfo.full_template] != undefined ) ? pageComponents[categoryInfo.full_template] : Loading;
+            postsList = (typeof this.props.posts[category] != 'undefined' ) ? this.props.posts[category].postslist : []
+        } 
 
         this.state = {
-            category: props.match.params.category,
+            category,
             postSlug: props.match.params.post,
             error: false,
-            categoryInfo: this.props.categories[props.match.params.category],
-            categoryList: this.props.categories[props.match.params.category].children,
-            currentComponent: this.state.pageComponents[this.props.categories[props.match.params.category].full_template],
-            postsList: undefined,
-            postFull: false,
-            pageComponents : {
-                PortfolioPage: PortfolioPage,
-                BlogFull: BlogFull
-            }
+            categoryInfo,
+            categoryList,
+            currentComponent,
+            postsList,
+            postFull: this.props.posts[this.props.match.params.post],
+            pageComponents
         }
         this.categoryChange = this.categoryChange.bind(this);
     }

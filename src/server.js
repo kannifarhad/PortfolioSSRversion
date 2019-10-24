@@ -20,6 +20,7 @@ server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', async (req, res) => {
+    let Urilang = req.params[0].split("/");
     try {
       const store = configureStore({});
 

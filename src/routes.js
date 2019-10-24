@@ -11,6 +11,14 @@ export default [
     }),
   },
   {
+    path: '/:lang?/:category?/view/:post',
+    exact: true,
+    component: asyncComponent({
+      loader: () => import('./App/Pages/PostsPage'), 
+      Placeholder: () => <div>...LOADING...</div>, 
+    }),
+  },
+  {
     path: '/:lang?/:category/page/:page',
     exact: true,
     component: asyncComponent({

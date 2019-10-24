@@ -9,7 +9,7 @@ class SochialShare extends React.Component {
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         this.setState({
             shareLink: window.location.href
         })

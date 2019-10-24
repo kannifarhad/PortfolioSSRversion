@@ -11,20 +11,20 @@ class Home extends Component{
 
 	static async getInitialProps({match, history, location, store, ...ctx }) {
         const homeData = await Promise.all([
-            await store.dispatch(getPost('en' , 'farhad-aliyev_53')),
-            await store.dispatch(getPostList('en', 'designer-skills')),
-            await store.dispatch(getPostList('en', 'programming-skills')),
-            await store.dispatch(getCategory('en', 'services')),
-            await store.dispatch(getPostList('en', 'services')),
+            await store.dispatch(getPost(match.params.lang , 'farhad-aliyev_53')),
+            await store.dispatch(getPostList(match.params.lang, 'designer-skills')),
+            await store.dispatch(getPostList(match.params.lang, 'programming-skills')),
+            await store.dispatch(getCategory(match.params.lang, 'services')),
+            await store.dispatch(getPostList(match.params.lang, 'services')),
             
-            await store.dispatch(getCategory('en', 'portfolio')),
-            await store.dispatch(getPostList('en', 'portfolio')),
+            await store.dispatch(getCategory(match.params.lang, 'portfolio')),
+            await store.dispatch(getPostList(match.params.lang, 'portfolio')),
 
-            await store.dispatch(getCategory('en', 'blog')),
-            await store.dispatch(getPostList('en', 'blog')),
+            await store.dispatch(getCategory(match.params.lang, 'blog')),
+            await store.dispatch(getPostList(match.params.lang, 'blog')),
 
-            await store.dispatch(getCategory('en', 'i-work-with')),
-            await store.dispatch(getPostList('en', 'i-work-with')),
+            await store.dispatch(getCategory(match.params.lang, 'i-work-with')),
+            await store.dispatch(getPostList(match.params.lang, 'i-work-with')),
         ]).then(async response => {
             return store.getState();
         });

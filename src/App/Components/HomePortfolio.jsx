@@ -10,7 +10,7 @@ class HomePortfolio extends React.Component{
 		super(props);
 		this.state = {
 			portfolioInfo : this.props.categories.portfolio,
-            works: [...this.props.posts.portfolio.postslist],
+            works: (typeof this.props.posts.portfolio != 'undefined') ? this.props.posts.portfolio.postslist : [],
             category: 'portfolio',
             categoryList: false,
             hasError:false
@@ -39,18 +39,13 @@ class HomePortfolio extends React.Component{
             });
         });
     }
-    
     componentDidMount(){
 		if(!this.state.portfolioInfo) {
-			this.setState({
-                portfolioInfo : this.props.categories.portfolio
-            });
+			this.getCategories();
 		}
 
 		if(this.state.works.length == 0) {
-            this.setState({
-                works: this.props.posts.portfolio.postslist
-            });
+			this.getPostList();
 		}
     }
 

@@ -3,10 +3,12 @@ import {Helmet} from "react-helmet";
 import { connect } from 'react-redux';
 import BlogItemsList from './Elements/BlogItemsList';
 import PagesHeader from './PagesHeader';
+import InnerHeader from '../Components/InnerHeader';
 
 function  BlogList (props){
     return(
         <React.Fragment>
+            <InnerHeader />
             <PagesHeader categoryList={props.categoryList} category={props.category} categoryChange={props.categoryChange} />
             <Helmet>
                 <meta charSet="utf-8" />

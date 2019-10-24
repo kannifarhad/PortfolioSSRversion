@@ -3,6 +3,7 @@ import {NavLink} from 'react-router-dom';
 import {Helmet} from "react-helmet";
 import SochialShare from './Elements/SochialShare';
 import PagesHeader from './PagesHeader';
+import InnerHeader from './InnerHeader';
 
 function BlogFull(props) {
         function returnFullstory(){
@@ -10,9 +11,10 @@ function BlogFull(props) {
         }
         return(
             <React.Fragment>
+                <InnerHeader />
                 <PagesHeader categoryList={props.categoryList} category={props.category} categoryChange={props.categoryChange} />
 
-                {(props.postFull != false) ? 
+                {(props.postFull != undefined) ? 
                 <React.Fragment>
                     <Helmet>
                         <meta charSet="utf-8" />

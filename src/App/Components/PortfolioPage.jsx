@@ -3,20 +3,20 @@ import { connect } from 'react-redux';
 import {Helmet} from "react-helmet";
 import SochialShare from './Elements/SochialShare';
 import PagesHeader from './PagesHeader';
-import InnerHeader from '../Components/InnerHeader';
+import InnerHeader from './InnerHeader';
 
 function PortfolioPage (props) {
         function returnFullstory(){
             return { __html : props.postFull.fullstory }
         }
         let currentLang = props.langList.filter(lang => { return lang.slug == props.config.lang})[0];
-        
+        console.log('PortfolioPage',props);
         return(
             <React.Fragment>
                 <InnerHeader />
                 <PagesHeader categoryList={props.categoryList} category={props.category} categoryChange={props.categoryChange} />
 
-                {(props.postFull != false) ? 
+                {(props.postFull != undefined) ? 
                 <React.Fragment>
                     <Helmet>
                         <meta charSet="utf-8" />
@@ -25,7 +25,7 @@ function PortfolioPage (props) {
                         <meta name="og:title" content={props.postFull.title} />
                         <meta name="og:description" content={props.postFull.shortstory} />
                         <meta name="og:image" content={props.postFull.thumb_image} />
-                        <meta name="og:url" content={window.location.href} />
+                        {/* <meta name="og:url" content={window.location.href} /> */}
                     </Helmet>
                     <div className="projectwrapper">
                         <div className="projectcircles"></div>

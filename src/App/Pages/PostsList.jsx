@@ -12,8 +12,12 @@ class PostsCategory extends React.Component {
     static async getInitialProps({match, history, location, store, ...ctx }) {
         const homeData = await Promise.all([
             
-            await store.dispatch(getCategory('en', match.params.category)),
-            await store.dispatch(getPostList('en', match.params.category)),
+            await store.dispatch(getCategory(match.params.lang, match.params.category)).then( async response=> {
+                if(response.data.children.length == 0){
+                    await store.dispatch(getCategory(match.params.lang, response.data.parent));
+                }
+            }),
+            await store.dispatch(getPostList(match.params.lang, match.params.category)),
         ]).then(async response => {
             return store.getState();
         });
@@ -21,18 +25,34 @@ class PostsCategory extends React.Component {
     }
     constructor(props) {
         super(props);
+        
         let listComponents = {
             PortfolioList: PortfolioList,
             BlogList: BlogList
         };
+
+        let categoryInfo = false;
+        let categoryList = false;
+        let currentComponent = Loading;
+        let postsList = [];
+        let category = this.props.match.params.category;
+
+
+        if(typeof this.props.categories[category] != 'undefined')  {
+            categoryInfo = this.props.categories[category];
+            categoryList = (categoryInfo.children.length == 0 ) ? this.props.categories[categoryInfo.parent] : categoryInfo;
+            currentComponent = (typeof listComponents[categoryInfo.list_template] != undefined ) ? listComponents[categoryInfo.list_template] : Loading;
+            postsList = (typeof this.props.posts[category] != undefined ) ? this.props.posts[category].postslist : []
+        } 
+
         this.state = {
             page: 1,
-            category: props.match.params.category,
+            category,
             error: false,
-            categoryInfo: this.props.categories[this.props.match.params.category],
-            categoryList: this.props.categories[this.props.match.params.category],
-            currentComponent: listComponents[this.props.categories[this.props.match.params.category].list_template],
-            postsList: [...this.props.posts[this.props.match.params.category].postslist],
+            categoryInfo,
+            categoryList,
+            currentComponent,
+            postsList,
             loadMore: false,
             listComponents
         }
@@ -56,6 +76,7 @@ class PostsCategory extends React.Component {
             });
         });
     }
+    
     categoryChange(slug){
         this.setState({
             category: slug
@@ -83,23 +104,23 @@ class PostsCategory extends React.Component {
     }
 
     getCategories(){
-        this.props.getCategory(this.props.config.lang , this.state.category).then( response => {
-            let categoryInfo = this.props.store.categories[this.state.category];
-
-            if(categoryInfo.children.length == 0){
-                this.props.getCategory(this.props.config.lang , categoryInfo.parent).then( response => {
+            this.props.getCategory(this.props.config.lang , this.state.category).then( response => {
+                let categoryInfo = this.props.store.categories[this.state.category];
+    
+                if(categoryInfo.children.length == 0){
+                    this.props.getCategory(this.props.config.lang , categoryInfo.parent).then( response => {
+                        this.setState({
+                            categoryList: this.props.store.categories[categoryInfo.parent],
+                            categoryInfo
+                        });
+                    });
+                }else{
                     this.setState({
-                        categoryList: this.props.store.categories[categoryInfo.parent],
+                        categoryList: categoryInfo,
                         categoryInfo
                     });
-                });
-            }else{
-                this.setState({
-                    categoryList: categoryInfo,
-                    categoryInfo
-                });
-            }
-        });
+                }
+            });    
     }
 
     getPostList(){
