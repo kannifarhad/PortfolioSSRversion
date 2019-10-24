@@ -9,9 +9,9 @@ import Subscribe from './App/Components/Subscribe';
 import Contact from './App/Components/Contact';
 
 var myScript = JSON.parse(document.getElementById('server-app-state').firstChild.data);
-// const preloaded = window.__PRELOADED_STATE__;
-// const allRules = Object.assign( preloaded, myScript);
-const store = configureStore(myScript);
+const preloaded = window.__PRELOADED_STATE__;
+const allRules = Object.assign( preloaded, myScript);
+const store = configureStore(allRules);
 
 ensureReady(routes).then(data =>
   hydrate(

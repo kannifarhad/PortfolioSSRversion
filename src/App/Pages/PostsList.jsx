@@ -9,22 +9,32 @@ import Loading from './Loading';
 
 
 class PostsCategory extends React.Component {
+    static async getInitialProps({match, history, location, store, ...ctx }) {
+        const homeData = await Promise.all([
+            
+            await store.dispatch(getCategory('en', match.params.category)),
+            await store.dispatch(getPostList('en', match.params.category)),
+        ]).then(async response => {
+            return store.getState();
+        });
+        return homeData;
+    }
     constructor(props) {
         super(props);
-
+        let listComponents = {
+            PortfolioList: PortfolioList,
+            BlogList: BlogList
+        };
         this.state = {
             page: 1,
             category: props.match.params.category,
             error: false,
-            categoryInfo: false,
-            categoryList: false,
-            currentComponent: Loading,
-            postsList: [],
+            categoryInfo: this.props.categories[this.props.match.params.category],
+            categoryList: this.props.categories[this.props.match.params.category],
+            currentComponent: listComponents[this.props.categories[this.props.match.params.category].list_template],
+            postsList: [...this.props.posts[this.props.match.params.category].postslist],
             loadMore: false,
-            listComponents : {
-                PortfolioList: PortfolioList,
-                BlogList: BlogList
-            },
+            listComponents
         }
         this.categoryChange = this.categoryChange.bind(this);
     }
@@ -109,7 +119,7 @@ class PostsCategory extends React.Component {
         });
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if(!this.state.categoryInfo) {
             this.getCategories();
         }

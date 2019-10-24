@@ -11,6 +11,22 @@ class HomeMyServices extends React.Component {
         }
         this.lampOver = this.lampOver.bind(this);
         this.lampOut = this.lampOut.bind(this);
+
+        if(this.state.aboutServices == undefined) {
+			this.props.getCategory(this.props.config.lang , 'services').then( response => {
+				this.setState({
+					aboutServices: this.props.store.categories['services'] 
+				});
+			});
+		}
+
+		if(this.state.services == undefined) {
+			this.props.getPostList(this.props.config.lang, 'services').then( response => {
+				this.setState({
+					services: this.props.store.posts['services'] 
+				});
+			});
+		}
     }
 
     lampOver(e){
@@ -51,19 +67,22 @@ class HomeMyServices extends React.Component {
         }
         
     }
+    
     render() {
         return(
             <div>
                 <div id="myabilities">
                     <div className="abiliteshead">
+                        {(this.state.aboutServices != undefined) ?
                         <div>
                             <h1>{this.state.aboutServices.title}</h1>
                             <p>{this.state.aboutServices.description}</p>
                         </div>
+                        : ''}
                     </div>
     
                     <div className="abilitiescont">
-                        {(this.state.services) ?
+                        {(this.state.services != undefined) ?
                          this.state.services.postslist.map(service => 
                             <div key={service.id} className="ability">
                                 <div className="abilityicon"><img src={service.thumb_image} /> </div>

@@ -94,10 +94,11 @@ class Contact extends React.Component {
 }
 
 
-const mapStateToProps = store => {
+const mapStateToProps = (store, ownprops) => {
     return {
         config: store.common.config,
-		languageData: store.common.translations,
+        languageData: store.common.translations,
+        ...ownprops
     }
 };
 

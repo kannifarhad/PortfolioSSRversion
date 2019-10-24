@@ -1,17 +1,9 @@
 import React from 'react';
 import { asyncComponent } from '@jaredpalmer/after';
 
-import Contact from './App/Components/Contact';
-import InnerHeader from './App/Components/InnerHeader';
-import Subscribe from './App/Components/Subscribe';
-import Home from './App/Pages/Home';
-import PostsList from './App/Pages/PostsList';
-import PostsPage from './App/Pages/PostsPage';
-import Error from './App/Pages/Error';
-
 export default [
   {
-    path: '/',
+    path: '/:lang?',
     exact: true,
     component: asyncComponent({
       loader: () => import('./App/Pages/Home'), 
@@ -19,14 +11,25 @@ export default [
     }),
   },
   {
-    path: '/about',
+    path: '/:lang?/:category/page/:page',
     exact: true,
     component: asyncComponent({
-      loader: () => import('./App/About'), 
+      loader: () => import('./App/Pages/PostsList'), 
       Placeholder: () => <div>...LOADING...</div>, 
     }),
   },
   {
-    component: Error
+    path: '/:lang?/:category?',
+    exact: true,
+    component: asyncComponent({
+      loader: () => import('./App/Pages/PostsList'), 
+      Placeholder: () => <div>...LOADING...</div>, 
+    }),
   },
+  {
+    component: asyncComponent({
+      loader: () => import('./App/Pages/Error'), 
+      Placeholder: () => <div>...LOADING...</div>, 
+    }),
+  }
 ];

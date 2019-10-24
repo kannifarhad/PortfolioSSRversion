@@ -8,7 +8,7 @@ class WorkedWithContainer extends React.Component {
 		super(props);
 		this.state = {
 			workedWithInfo : this.props.categories['i-work-with'],
-            partners: this.props.posts['i-work-with'],
+            partners: (typeof this.props.posts['i-work-with'] != 'undefined') ? this.props.posts['i-work-with'].postslist : [],
             category: 'i-work-with',
             hasError:false,
             options: {
@@ -28,6 +28,7 @@ class WorkedWithContainer extends React.Component {
                 },
             }
         }
+
     }
 
     componentDidUpdate(prevProps, prevState){
@@ -46,24 +47,42 @@ class WorkedWithContainer extends React.Component {
         
 
     }
+    componentDidUpdate(){
+        if(this.state.workedWithInfo == undefined) {
+			this.props.getCategory(this.props.config.lang , this.state.category).then( response => {
+				this.setState({
+					workedWithInfo: this.props.store.categories[this.state.category] 
+				});
+			});
+		}
 
+		if(this.state.partners.length == 0) {
+			this.props.getPostList(this.props.config.lang,  this.state.category).then( response => {
+				this.setState({
+					partners: this.props.store.posts[this.state.category].postslist
+				});
+			});
+        }
+    }
     componentDidCatch(error, info) {
         this.setState({ hasError: true });
-        console.log('Error', error);
     }
+
     render() {
         return(
             <div id="workedwith">
                 <div className="workedhead">
-                    <div>
-                    <h1>{this.state.workedWithInfo.title}</h1>
-                    <p>{this.state.workedWithInfo.description}</p>
-                    </div>
+                {(typeof(this.state.workedWithInfo) != 'undefined')?
+                    <React.Fragment>
+                        <h1>{this.state.workedWithInfo.title}</h1>
+                        <p>{this.state.workedWithInfo.description}</p>
+                    </React.Fragment>
+                : ""}
                 </div>
     
                 <div className="workwith">
                     <div className="logos">
-                    {(typeof(this.state.partners.postslist) != 'undefined')?
+                    {(typeof(this.state.partners) != 'undefined')?
                         <div></div>
                         // <OwlCarousel className="owl-theme" {...this.state.options} >
                         //     {this.state.partners.postslist.map(partner => 

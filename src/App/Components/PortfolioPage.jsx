@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import {Helmet} from "react-helmet";
 import SochialShare from './Elements/SochialShare';
 import PagesHeader from './PagesHeader';
+import InnerHeader from '../Components/InnerHeader';
 
 function PortfolioPage (props) {
         function returnFullstory(){
@@ -12,6 +13,7 @@ function PortfolioPage (props) {
         
         return(
             <React.Fragment>
+                <InnerHeader />
                 <PagesHeader categoryList={props.categoryList} category={props.category} categoryChange={props.categoryChange} />
 
                 {(props.postFull != false) ? 

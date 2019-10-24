@@ -1,7 +1,7 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import {Helmet} from "react-helmet";
 import { connect } from 'react-redux';
+import InnerHeader from '../Components/InnerHeader';
 
 function Error(props) {
         let currentLang = props.langList.filter(lang => { return lang.slug == props.config.lang})[0];
@@ -12,6 +12,7 @@ function Error(props) {
                     <title>{currentLang.sitetitle + ' | ' + props.languageData['Error!']}</title>
                     <meta name="description" content={currentLang.description} />
                 </Helmet>
+                <InnerHeader />
                 <div className="projectwrapper">
                     <div className="projectcircles"></div>
                     <div className="projecttitle"> <h1>{props.languageData['Error!']}</h1></div>

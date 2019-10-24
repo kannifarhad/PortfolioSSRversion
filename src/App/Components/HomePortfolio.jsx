@@ -15,8 +15,6 @@ class HomePortfolio extends React.Component{
             categoryList: false,
             hasError:false
         }
-        // portfolioInfo : this.props.categories.portfolio,
-        //     works: [...this.props.posts.portfolio.postslist],
         this.categoryChange = this.categoryChange.bind(this);
     }
     categoryChange(slug){

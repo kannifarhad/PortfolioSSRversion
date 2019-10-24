@@ -10,7 +10,7 @@ class HomeBlog extends React.Component{
 		super(props);
 		this.state = {
 			blogInfo : this.props.categories.blog,
-            works: [...this.props.posts.blog.postslist],
+            works: (typeof this.props.posts.blog != 'undefined') ? this.props.posts.blog.postslist : [],
             category: 'blog',
             categoryList: false,
             hasError:false
@@ -48,6 +48,18 @@ class HomeBlog extends React.Component{
         }
     }
 
+    
+    componentDidMount(){
+		if(!this.state.blogInfo) {
+			this.getCategories();
+		}
+
+		if(this.state.works.length == 0) {
+			this.getPostList();
+		}
+    }
+
+
     componentDidCatch(error, info) {
         this.setState({ hasError: true });
     }
@@ -57,8 +69,12 @@ class HomeBlog extends React.Component{
             <React.Fragment>
                 <div className="blogwrapper">
                     <div className="bloghead">
-                        <div><h1>{this.state.blogInfo.title}</h1></div>
-                        <p>{this.state.blogInfo.description}</p>
+                        {(typeof this.state.blogInfo != 'undefined') ? 
+                        <React.Fragment>
+                            <h1>{this.state.blogInfo.title}</h1>
+                            <p>{this.state.blogInfo.description}</p>
+                        </React.Fragment>
+                        : ''}
                     </div>
                     <BlogItemsList items={this.state.works} />
                     <NavLink to={`/${this.props.config.lang}/${this.state.category}`} className={"sitebutton"}>{this.props.languageData['View More']}</NavLink>

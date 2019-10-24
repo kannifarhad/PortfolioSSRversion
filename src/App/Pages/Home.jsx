@@ -39,7 +39,7 @@ class Home extends Component{
                 <HomeMyServices />
                 <HomePortfolio />
                 <HomeBlog />
-                <WorkedWith />
+                <WorkedWith /> 
             </div>
         )
     }

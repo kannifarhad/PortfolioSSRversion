@@ -9,6 +9,17 @@ import Error from './Error';
 import Loading from './Loading';
 
 class PostsPage extends React.Component {
+    static async getInitialProps({match, history, location, store, ...ctx }) {
+        const homeData = await Promise.all([
+            
+            await store.dispatch(getCategory('en', match.params.category)),
+            await store.dispatch(getPostList('en', match.params.category)),
+        ]).then(async response => {
+            return store.getState();
+        });
+        return homeData;
+    }
+
     constructor(props) {
         super(props);
 
@@ -16,9 +27,9 @@ class PostsPage extends React.Component {
             category: props.match.params.category,
             postSlug: props.match.params.post,
             error: false,
-            categoryInfo: false,
-            categoryList: false,
-            currentComponent: Loading,
+            categoryInfo: this.props.categories[props.match.params.category],
+            categoryList: this.props.categories[props.match.params.category].children,
+            currentComponent: this.state.pageComponents[this.props.categories[props.match.params.category].full_template],
             postsList: undefined,
             postFull: false,
             pageComponents : {
@@ -91,7 +102,7 @@ class PostsPage extends React.Component {
        
     }
 
-    componentWillMount() {
+    componentDidMount() {
         if(!this.state.categoryInfo) {
             this.getCategories();
         }

@@ -3,6 +3,7 @@ import {Helmet} from "react-helmet";
 import { connect } from 'react-redux';
 import PortfolioItemsList from './Elements/PortfolioItemsList';
 import PagesHeader from './PagesHeader';
+import InnerHeader from '../Components/InnerHeader';
 
 function  PortfolioList (props){
     return(
@@ -12,7 +13,7 @@ function  PortfolioList (props){
                 <title>{props.pageInfo.title + ' | ' + props.config.author} </title>
                 <meta name="description" content={props.pageInfo.description} />
             </Helmet>
-
+            <InnerHeader />
             <PagesHeader categoryList={props.categoryList} category={props.category} categoryChange={props.categoryChange} />
 
             <div className="projectwrapper">

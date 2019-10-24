@@ -7,16 +7,39 @@ class HomeAbout extends Component {
 	constructor(props){
 		super(props);
 		this.state = {
-			aboutMe : this.props.posts['farhad-aliyev_53'],
+			aboutMe: this.props.posts['farhad-aliyev_53'],
 			designerSkills: this.props.posts['designer-skills'],
 			programmerSkills: this.props.posts['programming-skills'],
+		}
+
+		if(this.state.aboutMe == undefined) {
+			this.props.getPost(this.props.config.lang , 'farhad-aliyev_53').then( response => {
+				this.setState({
+					aboutMe: this.props.store.posts['farhad-aliyev_53'] 
+				});
+			});
+		}
+		
+		if(this.state.designerSkills == undefined) {
+			this.props.getPostList(this.props.config.lang, 'designer-skills').then( response => {
+				this.setState({
+					designerSkills: this.props.store.posts['designer-skills'] 
+				});
+			});
+		}
+
+		if(this.state.programmerSkills == undefined) {
+			this.props.getPostList(this.props.config.lang, 'programming-skills').then( response => {
+				this.setState({
+					programmerSkills: this.props.store.posts['programming-skills'] 
+				});
+			});
 		}
 	}
 
 	returnFullstory(){
-		return { __html : this.state.aboutMe.fullstory}
+		return { __html :this.state.aboutMe.fullstory}
 	}
-
 
 	componentDidUpdate(prevProps, prevState){
         if(prevProps.config.lang != this.props.config.lang) {
@@ -46,7 +69,7 @@ class HomeAbout extends Component {
 		return(
 			<div id="aboutme">
 				 <div className="aboutmecircles"><div className="photo"></div></div>
-				 {(typeof this.state.aboutMe != false) ? 
+				 {(typeof this.state.aboutMe != 'undefined') ? 
 					<div className="name">
 						<span>{this.state.aboutMe.title}</span>
 						<p className="profession">{this.state.aboutMe.shortstory}</p>
@@ -54,8 +77,9 @@ class HomeAbout extends Component {
 						<div className="clear"></div> 
 					</div>
 					: ''}
-				
-				<Skills /> 
+				 {(typeof this.state.programmerSkills != undefined && this.state.designerSkills != undefined) ? 
+					<Skills /> 
+				: ''}
 			</div>
 			)
 	}
