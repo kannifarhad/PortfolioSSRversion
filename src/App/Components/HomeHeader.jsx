@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 
 import UlList from './Elements/UlLlist';
 import HeaderAnimation from './Elements/HeaderAnimation';
-import {langChange} from '../Redux/actions';
+import {langChange, getMenus, getTranslations} from '../Redux/actions';
 
 class HomeHeader extends React.Component{
     constructor(props){
@@ -12,10 +12,18 @@ class HomeHeader extends React.Component{
 			phoneMenu : false
         }
         this.openMenu = this.openMenu.bind(this);
+        this.langChangeFunc = this.langChangeFunc.bind(this);
+    }
+     
+    langChangeFunc(lang){
+        if(lang != this.props.config.lang) {
+            this.props.langChange(lang);
+            this.props.getTranslations(lang);
+            this.props.getMenus(lang);
+        }
     }
 
     openMenu(){
-        console.log('Phone Menu');
         this.setState({phoneMenu: !this.state.phoneMenu});
     }
     render() {
@@ -28,7 +36,7 @@ class HomeHeader extends React.Component{
                             menu={this.props.menusList.mainmenu.menujson} 
                             listClass='menu' 
                             icons={false} 
-                            LangClicked = {this.props.langChange} 
+                            LangClicked = {this.langChangeFunc} 
                             config = {this.props.config}
                             langList= {this.props.langList}
                             languageData={this.props.translations}
@@ -42,7 +50,7 @@ class HomeHeader extends React.Component{
                             menu={this.props.menusList.mainmenu.menujson} 
                             listClass='phonemenu' 
                             icons={false} 
-                            LangClicked = {this.props.langChange} 
+                            LangClicked = {this.langChangeFunc} 
                             config = {this.props.config}
                             langList= {this.props.langList}
                             languageData={this.props.translations}
@@ -67,7 +75,9 @@ const mapStateToProps = store => {
     }
 };
 const mapDispatchToProps = dispatch => ({
-    langChange: lang => dispatch(langChange(lang))
+    langChange: lang => dispatch(langChange(lang)),
+    getTranslations: lang=>dispatch(getTranslations(lang)),
+    getMenus: lang=>dispatch(getMenus(lang))
 });
 
 const HomeHeaderContainer = connect(mapStateToProps, mapDispatchToProps)(HomeHeader);

@@ -36,14 +36,20 @@ class PostsCategory extends React.Component {
         let currentComponent = Loading;
         let postsList = [];
         let category = this.props.match.params.category;
-
+        let loadMore = false;
 
         if(typeof this.props.categories[category] != 'undefined')  {
             categoryInfo = this.props.categories[category];
             categoryList = (categoryInfo.children.length == 0 ) ? this.props.categories[categoryInfo.parent] : categoryInfo;
             currentComponent = (typeof listComponents[categoryInfo.list_template] != undefined ) ? listComponents[categoryInfo.list_template] : Loading;
-            postsList = (typeof this.props.posts[category] != undefined ) ? this.props.posts[category].postslist : []
+            postsList = (typeof this.props.posts[category] != undefined ) ? this.props.posts[category].postslist : [];
         } 
+
+        if(typeof postsList != 'undefined'){
+            if(1 < this.props.posts[category].totalpages){
+                loadMore = true;
+            }
+        }
 
         this.state = {
             page: 1,
@@ -53,7 +59,7 @@ class PostsCategory extends React.Component {
             categoryList,
             currentComponent,
             postsList,
-            loadMore: false,
+            loadMore,
             listComponents
         }
         this.categoryChange = this.categoryChange.bind(this);

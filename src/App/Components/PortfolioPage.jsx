@@ -10,7 +10,6 @@ function PortfolioPage (props) {
             return { __html : props.postFull.fullstory }
         }
         let currentLang = props.langList.filter(lang => { return lang.slug == props.config.lang})[0];
-        console.log('PortfolioPage',props);
         return(
             <React.Fragment>
                 <InnerHeader />

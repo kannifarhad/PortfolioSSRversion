@@ -7,10 +7,10 @@ import { render } from '@jaredpalmer/after';
 import configureStore from './App/Redux/store/configureStore';
 import Html from './Html';
 import routes from './routes';
-import {getConfigs, getLangList, getMenus, getTranslations} from './App/Redux/actions';
+import {getConfigs, getLangList, getMenus, getTranslations, langChange} from './App/Redux/actions';
 import Subscribe from './App/Components/Subscribe';
 import Contact from './App/Components/Contact';
-
+import Helmet from 'react-helmet';
 const server = express();
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 server.use('/static/', express.static(process.env.RAZZLE_PUBLIC_DIR));
@@ -23,20 +23,23 @@ server
     let Urilang = req.params[0].split("/");
     try {
       const store = configureStore({});
-
       store.dispatch(getConfigs()).then( async response=> {
+            const lang = ( typeof response.data.langlist == 'undefined') ? response.data.lang : Urilang;
             Promise.all([
-                await store.dispatch(getTranslations(response.data.lang)).catch(error => { throw error;}),
-                await store.dispatch(getMenus(response.data.lang)).catch(error => { throw error; }),
+                await store.dispatch(langChange(lang)),
+                await store.dispatch(getTranslations(lang)).catch(error => { throw error;}),
+                await store.dispatch(getMenus(lang)).catch(error => { throw error; }),
                 await store.dispatch(getLangList()).catch(error => { throw error; })
             ]).then(async response => {
               const serverState = store.getState();
               const customRenderer = (node) => {
                                   const App = <Provider store={store}>{node}<Subscribe /><Contact /></Provider>;
                                   const html = renderToString(App);
+                                  const helmet = Helmet.renderStatic();
                                   return {
                                     html,
-                                    serverState
+                                    serverState,
+                                    helmet
                                   };
                               };
               const html = await render({

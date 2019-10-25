@@ -12,29 +12,7 @@ class HomeAbout extends Component {
 			programmerSkills: this.props.posts['programming-skills'],
 		}
 
-		if(this.state.aboutMe == undefined) {
-			this.props.getPost(this.props.config.lang , 'farhad-aliyev_53').then( response => {
-				this.setState({
-					aboutMe: this.props.store.posts['farhad-aliyev_53'] 
-				});
-			});
-		}
-		
-		if(this.state.designerSkills == undefined) {
-			this.props.getPostList(this.props.config.lang, 'designer-skills').then( response => {
-				this.setState({
-					designerSkills: this.props.store.posts['designer-skills'] 
-				});
-			});
-		}
 
-		if(this.state.programmerSkills == undefined) {
-			this.props.getPostList(this.props.config.lang, 'programming-skills').then( response => {
-				this.setState({
-					programmerSkills: this.props.store.posts['programming-skills'] 
-				});
-			});
-		}
 	}
 
 	returnFullstory(){
@@ -62,6 +40,31 @@ class HomeAbout extends Component {
 				});
 			});
         }
+	}
+	componentDidMount(){
+		if(this.state.aboutMe == undefined) {
+			this.props.getPost(this.props.config.lang , 'farhad-aliyev_53').then( response => {
+				this.setState({
+					aboutMe: this.props.store.posts['farhad-aliyev_53'] 
+				});
+			});
+		}
+		
+		if(this.state.designerSkills == undefined) {
+			this.props.getPostList(this.props.config.lang, 'designer-skills').then( response => {
+				this.setState({
+					designerSkills: this.props.store.posts['designer-skills'] 
+				});
+			});
+		}
+
+		if(this.state.programmerSkills == undefined) {
+			this.props.getPostList(this.props.config.lang, 'programming-skills').then( response => {
+				this.setState({
+					programmerSkills: this.props.store.posts['programming-skills'] 
+				});
+			});
+		}
 	}
 	
 	

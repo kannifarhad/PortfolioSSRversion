@@ -4,19 +4,24 @@ import { connect } from 'react-redux';
 function PortfolioHead(props) {
         return(
             <div className="portfoliohead">
-                <h1>{props.portfolioInfo.title}</h1>
-                <p>{props.portfolioInfo.description}</p>
-                <div className="clear"></div>
-                <ul className="filters">
-                    <li data-filter="portfolio" onClick={() => props.categoryChange('portfolio')} className={(props.category == 'portfolio')? "active" : ""}>{props.languageData['All']}</li>
-                    {(typeof props.portfolioInfo['children'] !== 'undefined') ?
-                        props.portfolioInfo['children'].map(categorie => <li 
-                                key={categorie.id} 
-                                onClick={() => props.categoryChange(categorie.slug)} 
-                                className={(props.category == categorie.slug)? "active" : ""}
-                                data-filter={`.${categorie.slug}`}>{categorie.title} </li>)
-                        : ""}
-                </ul>
+                {(typeof props.portfolioInfo != 'undefined') ?
+                    <React.Fragment>
+                        <h1>{props.portfolioInfo.title}</h1>
+                        <p>{props.portfolioInfo.description}</p>
+                        <div className="clear"></div>
+                            <ul className="filters">
+                                <li data-filter="portfolio" onClick={() => props.categoryChange('portfolio')} className={(props.category == 'portfolio')? "active" : ""}>{props.languageData['All']}</li>
+                                {(typeof props.portfolioInfo['children'] !== 'undefined') ?
+                                    props.portfolioInfo['children'].map(categorie => <li 
+                                            key={categorie.id} 
+                                            onClick={() => props.categoryChange(categorie.slug)} 
+                                            className={(props.category == categorie.slug)? "active" : ""}
+                                            data-filter={`.${categorie.slug}`}>{categorie.title} </li>)
+                                    : ""}
+                            
+                            </ul>
+                    </React.Fragment> 
+                : ""}
             </div>
         )
     }
