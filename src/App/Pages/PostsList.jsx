@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import {getCategory, getCategoryList, getPost, getPostList} from '../Redux/actions';
-
+import { Link } from 'react-router-dom';
 import PortfolioList  from '../Components/PortfolioList';
 import BlogList  from '../Components/BlogList';
 import Error from './Error';
@@ -10,14 +10,16 @@ import Loading from './Loading';
 
 class PostsCategory extends React.Component {
     static async getInitialProps({match, history, location, store, ...ctx }) {
+        const state = store.getState();
+        const lang = state.common.config.lang;
+        let page = (typeof match.params.page == 'undefined') ? 1 : match.params.page;
         const homeData = await Promise.all([
-            
-            await store.dispatch(getCategory(match.params.lang, match.params.category)).then( async response=> {
+            await store.dispatch(getCategory(lang, match.params.category)).then( async response=> {
                 if(response.data.children.length == 0){
-                    await store.dispatch(getCategory(match.params.lang, response.data.parent));
+                    await store.dispatch(getCategory(lang, response.data.parent));
                 }
             }),
-            await store.dispatch(getPostList(match.params.lang, match.params.category)),
+            await store.dispatch(getPostList(lang, match.params.category, page)),
         ]).then(async response => {
             return store.getState();
         });
@@ -37,6 +39,7 @@ class PostsCategory extends React.Component {
         let postsList = [];
         let category = this.props.match.params.category;
         let loadMore = false;
+        let page = (typeof this.props.match.params.page == 'undefined') ? 1 : this.props.match.params.page;
 
         if(typeof this.props.categories[category] != 'undefined')  {
             categoryInfo = this.props.categories[category];
@@ -45,14 +48,14 @@ class PostsCategory extends React.Component {
             postsList = (typeof this.props.posts[category] != undefined ) ? this.props.posts[category].postslist : [];
         } 
 
-        if(typeof postsList != 'undefined'){
-            if(1 < this.props.posts[category].totalpages){
+        if(typeof this.props.posts[category] != 'undefined'){
+            if(page < this.props.posts[category].totalpages){
                 loadMore = true;
             }
         }
 
         this.state = {
-            page: 1,
+            page,
             category,
             error: false,
             categoryInfo,
@@ -85,7 +88,8 @@ class PostsCategory extends React.Component {
     
     categoryChange(slug){
         this.setState({
-            category: slug
+            category: slug,
+            page:1
         });
     }
 
@@ -130,18 +134,18 @@ class PostsCategory extends React.Component {
     }
 
     getPostList(){
-        this.props.getPostList(this.props.config.lang,  this.state.category, 1).then( response => {
+        this.props.getPostList(this.props.config.lang,  this.state.category, this.state.page).then( response => {
             let pageListInfo = this.props.store.posts[this.state.category];
             let loadMore = false;
             let postsList = pageListInfo.postslist;
-            if(1 < pageListInfo.totalpages){
+            if(this.state.page < pageListInfo.totalpages){
                 loadMore = true;
             }
             this.setState({
                 pageListInfo,
                 postsList,
                 loadMore,
-                page : 2
+                page : this.state.page + 1
             });
         });
     }
@@ -192,7 +196,12 @@ class PostsCategory extends React.Component {
                 />
                 
                 {(this.state.loadMore) ?
-                    <div onClick={()=> this.loadMorePosts()} className={"sitebutton"}>{this.props.languageData['Load More']}</div> : "" }
+                    <React.Fragment>
+                        <div onClick={()=> this.loadMorePosts()} className={"sitebutton"}>{this.props.languageData['Load More']}</div>
+                        <Link style={{display:"none"}} to={`/${this.props.match.params.lang}/${this.props.match.params.category}/page/${this.state.page}`}>{this.props.languageData['Load More']}</Link>
+                    </React.Fragment>
+                    
+                    : "" }
             </div>
         )
     }

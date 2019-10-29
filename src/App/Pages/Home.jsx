@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import HomeAbout from '../Components/HomeAbout';
 import HomeHeader from '../Components/HomeHeader';
 import HomeMyServices from '../Components/HomeMyServices';
@@ -35,12 +36,12 @@ class Home extends Component{
     }
     
     render() {
+        let currentLang = this.props.langList.filter(lang => { return lang.slug == this.props.config.lang})[0];
         return(
             <React.Fragment>
                 <Helmet encodeSpecialCharacters={true}>
-                    <title></title>
-                    <meta name="description" content="Helmet application" />
-                    <meta name="og:title" content="эЗщфлывəəəasdasşoO(" />
+                    <title>{currentLang.sitetitle}</title>
+                    <meta name="description" content={currentLang.description} />
                 </Helmet>
                 <div className="wrapper">
                     <HomeHeader />
@@ -54,4 +55,17 @@ class Home extends Component{
         )
     }
 }
-export default Home;
+const mapStateToProps = (store, ownProps) => {
+    return {
+		config : store.common.config,
+        languageData: store.common.translations,
+        posts : store.posts,
+        langList: store.common.langList,
+        categories: store.categories,
+        store,
+        ...ownProps
+    }
+};
+
+const HomeContainer = connect(mapStateToProps, null)(Home);
+export default HomeContainer;

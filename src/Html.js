@@ -9,7 +9,6 @@ class CustomDocument extends React.Component {
 
   render() {
     const { helmet, assets, data, serverState } = this.props;
-    console.log('Helmet', helmet);
     // get attributes from React Helmet
     const htmlAttrs = helmet.htmlAttributes.toComponent();
     const bodyAttrs = helmet.bodyAttributes.toComponent();

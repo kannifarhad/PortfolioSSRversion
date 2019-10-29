@@ -14,17 +14,17 @@ import Helmet from 'react-helmet';
 const server = express();
 const assets = require(process.env.RAZZLE_ASSETS_MANIFEST);
 server.use('/static/', express.static(process.env.RAZZLE_PUBLIC_DIR));
-console.log('public',process.env.RAZZLE_PUBLIC_DIR);
 
 server
   .disable('x-powered-by')
   .use(express.static(process.env.RAZZLE_PUBLIC_DIR))
   .get('/*', async (req, res) => {
-    let Urilang = req.params[0].split("/");
+    let Urilang = req.params[0].split("/")[0];
     try {
       const store = configureStore({});
       store.dispatch(getConfigs()).then( async response=> {
-            const lang = ( typeof response.data.langlist == 'undefined') ? response.data.lang : Urilang;
+            const lang = ( typeof response.data.langlist[Urilang] == 'undefined') ? response.data.lang : Urilang;
+            //const lang = 'az';
             Promise.all([
                 await store.dispatch(langChange(lang)),
                 await store.dispatch(getTranslations(lang)).catch(error => { throw error;}),

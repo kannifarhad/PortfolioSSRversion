@@ -12,7 +12,6 @@ export default [
   },
   {
     path: '/:lang?/:category?/view/:post',
-    exact: true,
     component: asyncComponent({
       loader: () => import('./App/Pages/PostsPage'), 
       Placeholder: () => <div>...LOADING...</div>, 
@@ -20,7 +19,6 @@ export default [
   },
   {
     path: '/:lang?/:category/page/:page',
-    exact: true,
     component: asyncComponent({
       loader: () => import('./App/Pages/PostsList'), 
       Placeholder: () => <div>...LOADING...</div>, 
@@ -28,7 +26,6 @@ export default [
   },
   {
     path: '/:lang?/:category?',
-    exact: true,
     component: asyncComponent({
       loader: () => import('./App/Pages/PostsList'), 
       Placeholder: () => <div>...LOADING...</div>, 

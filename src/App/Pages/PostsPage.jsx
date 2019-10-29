@@ -10,15 +10,17 @@ import Loading from './Loading';
 
 class PostsPage extends React.Component {
     static async getInitialProps({match, history, location, store, ...ctx }) {
+        const state = store.getState();
+        const lang = state.common.config.lang;
+
         const homeData = await Promise.all([
-            
-            await store.dispatch(getCategory('en', match.params.category)).then( async response=> {
+            await store.dispatch(getCategory(lang, match.params.category)).then( async response=> {
                 if(response.data.children.length == 0){
-                    await store.dispatch(getCategory('en', response.data.parent));
+                    await store.dispatch(getCategory(lang, response.data.parent));
                 }
             }),
-            await store.dispatch(getPostList('en', match.params.category)),
-            await store.dispatch(getPost('en', match.params.post)),
+            await store.dispatch(getPostList(lang, match.params.category)),
+            await store.dispatch(getPost(lang, match.params.post)),
         ]).then(async response => {
             return store.getState();
         });
