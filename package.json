@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "@jaredpalmer/after": "latest",
-    "axios": "^0.19.0",
+    "axios": "^0.21.1",
     "express": "^4.16.2",
     "razzle": "^3.0.0",
     "react": "^16.2.0",
